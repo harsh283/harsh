@@ -1,11 +1,11 @@
 package com.capg.greatoutdoor.addressmanagement.model;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="retailer_address")
 public class Address {
 @Id
 private String addressId;
