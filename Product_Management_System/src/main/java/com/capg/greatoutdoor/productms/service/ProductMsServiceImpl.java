@@ -91,4 +91,13 @@ public class ProductMsServiceImpl implements IProductMsService{
 		return productList;	
 		}
 	}
+
+
+
+	@Override
+	public ProductDto getProduct(String productId) {
+		// TODO Auto-generated method stub
+		
+		return productRepository.getOne(productId);
+	}
 }

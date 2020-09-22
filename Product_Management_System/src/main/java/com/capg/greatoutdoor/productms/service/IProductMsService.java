@@ -13,4 +13,5 @@ public interface IProductMsService {
 	public boolean editProduct(ProductDto product);
 	public boolean deleteProduct(String productId);
 	public List<ProductDto> searchProduct(String productDetail);
+	public ProductDto getProduct(String productId);
 }

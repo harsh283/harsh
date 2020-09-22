@@ -61,4 +61,10 @@ public class ProductMasterController {
 	{
 		return productService.searchProduct(productDetail);
 	}
+	@GetMapping("/get/productId/{productId}")
+	public ProductDto getProduct(@PathVariable String productId)
+	{
+		return productService.getProduct(productId);
+	}
+	
 }
