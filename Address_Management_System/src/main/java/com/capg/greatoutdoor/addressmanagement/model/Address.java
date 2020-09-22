@@ -3,7 +3,13 @@ package com.capg.greatoutdoor.addressmanagement.model;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
+/**
+* The Address Model class 
+*
+* @author   :Shambu Harsh Kumar
+* @version  :1.0
+* @since    :2020-08-13 
+**/
 @Entity
 @Table(name="retailer_address")
 public class Address {

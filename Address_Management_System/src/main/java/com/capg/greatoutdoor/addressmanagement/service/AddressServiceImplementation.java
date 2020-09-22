@@ -5,21 +5,29 @@ import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.capg.greatoutdoor.addressmanagement.exceptions.AddressDoesnotExist;
 import com.capg.greatoutdoor.addressmanagement.exceptions.EmptyAddressListException;
 import com.capg.greatoutdoor.addressmanagement.model.Address;
 import com.capg.greatoutdoor.addressmanagement.repository.IAddressRepository;
+/**
+* AddressServiceImp class implements the service interface and to access the AddressRepository methods
+*/
 @Service
 public class AddressServiceImplementation implements IAddressService {
 @Autowired
 private Random random;
 @Autowired
 private IAddressRepository addressRepository;
+@Autowired
+private RestTemplate restTemplate;
 	@Override
 	public boolean addAddress(Address addressObject) {
 		// TODO Auto-generated method stub
 		addressObject.setAddressId(String.valueOf(random.nextInt(100000)));
+		String addressId=addressObject.getAddressId();
+		restTemplate.put("http://localhost:8400/userdata/setaddresslist/"+addressObject.getUserId()+"/"+addressId, null);
 		addressRepository.save(addressObject);
 		return true;
 	}
