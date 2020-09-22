@@ -22,6 +22,7 @@ private RestTemplate restTemplate;
 		// TODO Auto-generated method stub
 		if(wishListRepository.existsById(wishListObject.getUserId()))
 		{
+
 				WishListDTO existingWishList=wishListRepository.getOne(wishListObject.getUserId());
 				for (String productId : wishListObject.getProductIds()) {
 					existingWishList.getProductIds().add(productId);	
@@ -46,6 +47,7 @@ private RestTemplate restTemplate;
 			WishListDTO existingWishList=wishListRepository.getOne(userId);
 			existingWishList.getProductIds().remove(productId);
 			restTemplate.delete("http://localhost:8400/userdata/deletelist/"+userId+"/"+productId);
+			wishListRepository.save(existingWishList);
 			return true;
 		}
 		throw new UserDoesnotExistsException("User with userId "+userId+" doesnot exist");
@@ -59,15 +61,16 @@ private RestTemplate restTemplate;
 		List<String> products= wishListObject.getProductIds();
 		List<ProductDto> productList=new ArrayList<>();
 		for (String string : products) {
-			ProductDto product=restTemplate.getForObject("http://localhost:8300/productmaster/get"+string, ProductDto.class);
+			ProductDto product=restTemplate.getForObject("http://localhost:8300/productmaster/get/productId/"+string, ProductDto.class);
 			productList.add(product);
 		}
 		
-		
+		return productList;
 		
 	}
+		else throw new RuntimeException("dhajd");
 		
-		return productList;
+	
 
 }
 }
