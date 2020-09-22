@@ -1,141 +1,114 @@
 package com.capg.greatoutdoor.cartmanagement.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import com.capg.greatoutdoor.cartmanagement.exception.ProductNotFound;
+import com.capg.greatoutdoor.cartmanagement.exception.UserNotFound;
 import com.capg.greatoutdoor.cartmanagement.model.CartDTO;
+import com.capg.greatoutdoor.cartmanagement.model.ProductDto;
 import com.capg.greatoutdoor.cartmanagement.repository.ICartRepo;
+
+/**
+* CartServiceImp class implements the service interface and to access the cartRepository methods
+*/
 @Service
 public class CartServiceImpl implements ICartManagementService {
-@Autowired
-private ICartRepo cartRepo;
-//	@Override
-//	public CartDTO addToCart(CartDTO cart) {
-//		System.out.println(cart.getUserId());
-//		// TODO Auto-generated method stub
-//		if(cartRepo.existsById(cart.getUserId()))
-//		{
-//			 CartDTO cartObject=cartRepo.getOne(cart.getUserId());
-//			
-//			//if(cartObject.getProductId().)
-//			 
-//			 //for (String pList: cartObject.getProductId()) {
-//				if(cartObject.getProductId().equals(cart.getProductId()))
-//				{
-//					int quantity=cartObject.getQuantity()+cart.getQuantity();
-//					cartObject.setQuantity(quantity);
-//					return cartRepo.save(cartObject);
-//				}
-//				else
-//				{
-//					cartObject.setProductId(cart.getProductId());
-//					cartObject.setQuantity(cart.getQuantity());
-//					return cartRepo.save(cartObject);
-//				}		
-//				
-//		}
-//		else
-//		{
-//			CartDTO addCart = new CartDTO();
-//			addCart.setUserId(cart.getUserId());
-//			addCart.setQuantity(cart.getQuantity());
-//			addCart.setProductId(cart.getProductId());
-//			return cartRepo.save(addCart);
-//		}
-//			
-//	}
-
-	@Override
-	public boolean removeFromCart(String productId) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public CartDTO viewAllProductsInCart(String userId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	@Autowired
+	private RestTemplate restTemplate;
+	@Autowired
+	private ICartRepo cartRepo;
+	/**
+	* Adding products to cart
+	*/
 	@Override
 	public CartDTO addToCart(CartDTO cart) {
-		// TODO Auto-generated method stub
-		if(cartRepo.existsById(cart.getUserId()))
-		{
-			 CartDTO cartObject=cartRepo.getOne(cart.getUserId());
-			// Set<String> productList=cart.getDetails().keySet();
-			HashMap<String,Integer> map=cart.getDetails();
-//			if(cartObject.getDetails().containsKey(map))
-//			{
-//				
-//			}
-			Set<String> keys=map.keySet();
-			Set<String> existingKeys=cartObject.getDetails().keySet();
-			
+		boolean flag = false;
+		HashMap<String, Integer> map = cart.getMyCart();
+		Set<String> keys = map.keySet();
+		List<String> keyList = new ArrayList<String>(keys);
+		String productKey = "";
+		if (cartRepo.existsById(cart.getUserId())) {
+			CartDTO cartObject = cartRepo.getOne(cart.getUserId());
+			Set<String> existingKeys = cartObject.getMyCart().keySet();
 			for (String string : keys) {
-				if(existingKeys.contains(string))
-				{
-					int q=cartObject.getDetails().get(string)+map.get(string);
-					cartObject.getDetails().replace(string, q);
-					
-				}
-				else
-				{
-					cartObject.setDetails(cart.getDetails());
+				if (existingKeys.contains(string)) {
+					productKey = string;
+					flag = true;
+					break;
 				}
 			}
-			return cartRepo.save(cartObject);
-		}
-		else {
-		
+
+			if (flag == true) {
+				int q = cartObject.getMyCart().get(productKey) + map.get(productKey);
+				cartObject.getMyCart().replace(productKey, q);
+				
+				return cartRepo.save(cartObject);
+			} else {
+				for (String string : keyList) {
+					cartObject.getMyCart().put(string, map.get(string));
+					restTemplate.put("http://localhost:8400/userdata/setcartlist/"+cart.getUserId()+"/"+string,ProductDto.class );
+				}
+
+				return cartRepo.save(cartObject);
+			}
+		} else {
+			for (String string2 : cart.getMyCart().keySet()) {
+				restTemplate.put("http://localhost:8400/userdata/setcartlist/"+cart.getUserId()+"/"+string2,ProductDto.class );
+			}
+			
 			return cartRepo.save(cart);
 		}
-	//	return null;
 	}
+	/**
+	* Removing products from cart
+	*/
+	@Override
+	public boolean removeFromCart(String userId, String productId) throws ProductNotFound, UserNotFound {
+		boolean flag = false;
+		if (cartRepo.existsById(userId)) {
+			CartDTO cartdto = cartRepo.getOne(userId);
+			Set<String> keys = cartdto.getMyCart().keySet();
+			if (keys.contains(productId)) {
+				cartdto.getMyCart().remove(productId);
+				cartRepo.save(cartdto);
+				flag = true;
+			} else {
+				throw new ProductNotFound("product not found");
+			}
+		} else {
+			throw new UserNotFound("invalid user");
+		}
 
-//	@Override
-//	public CartDTO addToCart(CartDTO cart) {
-//		// TODO Auto-generated method stub
-//		boolean flag=false;
-//		if(cartRepo.existsById(cart.getUserId()))
-//		{
-//			 CartDTO cartObject=cartRepo.getOne(cart.getUserId());
-//			
-//			 for (String pList: cartObject.getProductId()) {
-//			if(cartObject.getProductId().equals(cart.getProductId()))
-//			{
-//				flag=true;
-//				break;
-//				
-//			}
-//		}
-//			 if(flag==true)
-//			 {
-//				 int quantity=cartObject.getQuantity()+cart.getQuantity();
-//					cartObject.setQuantity(quantity);
-//			 }
-//			 else
-//			 {
-//				 cartObject.setProductId(cart.getProductId());
-//					cartObject.setQuantity(cart.getQuantity());
-//					return cartRepo.save(cartObject);
-//			 }
-//			 return cartRepo.saveAndFlush(cartObject);
-//		}
-//		else
-//		{
-//			
-//			CartDTO addCart = new CartDTO();
-//			addCart.setUserId(cart.getUserId());
-//			addCart.setQuantity(cart.getQuantity());
-//			addCart.setProductId(cart.getProductId());
-//			return cartRepo.saveAndFlush(addCart);
-//		}
-//		
-//			
-//	}
+		return flag;
+	}
+	/**
+	* fetching all products from cart
+	*/
+	@Override
+	public List<ProductDto> viewAllProductsInCart(String userId) throws UserNotFound {
+		int quantity=0;
+		if (cartRepo.existsById(userId)) {
+			CartDTO cartdto = cartRepo.getOne(userId);
+			List<ProductDto> productList=new ArrayList<>();
+			
+			for (String productId : cartdto.getMyCart().keySet()) {
+				ProductDto productObject=restTemplate.getForObject("http://localhost:8300/productmaster/get/productId/"+productId, ProductDto.class);
+				quantity=cartdto.getMyCart().get(productId);
+				productObject.setQuantity(quantity);
+				productList.add(productObject);
+			}
+			
+			return productList;
+		} else {
+			throw new UserNotFound("invalid user");
+		}
 
+	}
 }
