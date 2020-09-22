@@ -3,6 +3,7 @@ package com.capg.greatoutdoor.usermanagement.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,15 +25,20 @@ public User add(@RequestBody User user)
 {
 	return service.add(user);
 }
-@PutMapping("/setlist/{userId}/{productId}")
-public User setTheWishList(@PathVariable String userId,@PathVariable String productId)
-{
-return service.setTheWishList(userId,productId);
-}
+
 @GetMapping("/getallusers")
 public List<User> getAllUsers()
 {
 return service.getAllUsers();	
 }
-
+@PutMapping("/setlist/{userId}/{productId}")
+public void setTheWishList(@PathVariable String userId,@PathVariable String productId)
+{
+ service.setTheWishList(userId,productId);
+}
+@DeleteMapping("deletelist/{userId}/{productId}")
+public void deleteFromTheWishList(@PathVariable String userId,@PathVariable String productId)
+{
+service.deleteFromTheWishList(userId,productId);
+}
 }

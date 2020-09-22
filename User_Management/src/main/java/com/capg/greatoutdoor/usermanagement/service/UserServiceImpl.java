@@ -52,10 +52,12 @@ private Random random;
 		{
    			throw new UserEmailInvalidException("user email is not valid");
 		}
-		else if(!( m4.find() &&  m4.group().equals(user.getUserNumber())) )
-		{
-			throw new UserNumberInvalidException("contact number should contain 10 digits and starting may be 7,8 or 9");
-		}
+		/*
+		 * else if(!( m4.find() && m4.group().equals(user.getUserNumber())) ) { throw
+		 * new
+		 * UserNumberInvalidException("contact number should contain 10 digits and starting may be 7,8 or 9"
+		 * ); }
+		 */
 		else if(userRepo.getUserByUserName(user.getUserName())!=null)
 			throw new UserNameAlreadyExistException("User with Name "+user.getUserName()+" already exist");
 		
@@ -76,7 +78,7 @@ private Random random;
 		
 	}
 	@Override
-	public User setTheWishList(String userId, String productId) {
+	public void setTheWishList(String userId, String productId) {
 		// TODO Auto-generated method stub
 		User user=userRepo.getOne(userId);
 		List<String> ids=new ArrayList<>();
@@ -84,19 +86,27 @@ private Random random;
 		{
 			ids.add(productId);
 			user.setWishListIds(ids);
+			userRepo.save(user);
 		}
 		else
 		{
 			user.getWishListIds().add(productId);
-		}
-		userRepo.save(user);
-		
-		return user;
+		    userRepo.save(user);
+		}	
 	}
 	@Override
 	public List<User> getAllUsers() {
 		// TODO Auto-generated method stub
 		List<User> userList=userRepo.findAll();
 		return userList;
+	}
+	@Override
+	public void deleteFromTheWishList(String userId, String productId) {
+		// TODO Auto-generated method stub
+		User user=userRepo.getOne(userId);
+		User userWishList= userRepo.getOne(userId);
+		userWishList.getWishListIds().remove(productId);
+		userRepo.save(userWishList);
+		
 	}
 }

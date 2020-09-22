@@ -7,10 +7,8 @@ import com.capg.greatoutdoor.usermanagement.model.User;
 public interface IUserService {
 
 	User add(User user);
-
-	User setTheWishList(String userId, String productId);
-
-
 	List<User> getAllUsers();
+	void setTheWishList(String userId, String productId);
+	void deleteFromTheWishList(String userId, String productId);
 
 }
