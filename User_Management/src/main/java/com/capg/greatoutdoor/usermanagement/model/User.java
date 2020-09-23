@@ -19,12 +19,18 @@ public class User {
 	private String userRole;
 	@ElementCollection
 	private List<String> wishListIds;
+	@ElementCollection
+	private List<String> cartList;
+	@ElementCollection
+	private List<String> orderIds;
+	@ElementCollection
+	private List<String> addressIds;
 	public User() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	public User(String userName, String userId, String userMail, String userPassword, long userNumber, String userRole,
-			List<String> wishListIds) {
+			List<String> wishListIds, List<String> cartList, List<String> orderIds, List<String> addressIds) {
 		super();
 		this.userName = userName;
 		this.userId = userId;
@@ -33,6 +39,9 @@ public class User {
 		this.userNumber = userNumber;
 		this.userRole = userRole;
 		this.wishListIds = wishListIds;
+		this.cartList = cartList;
+		this.orderIds = orderIds;
+		this.addressIds = addressIds;
 	}
 	public String getUserName() {
 		return userName;
@@ -76,11 +85,31 @@ public class User {
 	public void setWishListIds(List<String> wishListIds) {
 		this.wishListIds = wishListIds;
 	}
+	public List<String> getCartList() {
+		return cartList;
+	}
+	public void setCartList(List<String> cartList) {
+		this.cartList = cartList;
+	}
+	public List<String> getOrderIds() {
+		return orderIds;
+	}
+	public void setOrderIds(List<String> orderIds) {
+		this.orderIds = orderIds;
+	}
+	public List<String> getAddressIds() {
+		return addressIds;
+	}
+	public void setAddressIds(List<String> addressIds) {
+		this.addressIds = addressIds;
+	}
 	@Override
 	public String toString() {
 		return "User [userName=" + userName + ", userId=" + userId + ", userMail=" + userMail + ", userPassword="
 				+ userPassword + ", userNumber=" + userNumber + ", userRole=" + userRole + ", wishListIds="
-				+ wishListIds + "]";
+				+ wishListIds + ", cartList=" + cartList + ", orderIds=" + orderIds + ", addressIds=" + addressIds
+				+ "]";
 	}
+	
 	
 }

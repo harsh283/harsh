@@ -12,9 +12,9 @@ public class UserManagementApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(UserManagementApplication.class, args);
 	}
-@Bean
-public Random getRandom()
-{
-return new Random();	
-}
+	@Bean
+	public Random getRandom()
+	{
+	return new Random();	
+	}
 }

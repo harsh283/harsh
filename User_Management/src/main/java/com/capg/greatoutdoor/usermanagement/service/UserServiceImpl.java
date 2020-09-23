@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service;
 
 import com.capg.greatoutdoor.usermanagement.exceptions.ContactNumberAlreadyExistException;
 import com.capg.greatoutdoor.usermanagement.exceptions.EmailAlreadyExistException;
+import com.capg.greatoutdoor.usermanagement.exceptions.IllegalUserException;
 import com.capg.greatoutdoor.usermanagement.exceptions.UserEmailInvalidException;
 import com.capg.greatoutdoor.usermanagement.exceptions.UserNameAlreadyExistException;
 import com.capg.greatoutdoor.usermanagement.exceptions.UserNameInvalidException;
+import com.capg.greatoutdoor.usermanagement.exceptions.UserNotFoundException;
 import com.capg.greatoutdoor.usermanagement.exceptions.UserNumberInvalidException;
 import com.capg.greatoutdoor.usermanagement.exceptions.UserPasswordInvalidException;
 import com.capg.greatoutdoor.usermanagement.model.User;
@@ -68,15 +70,60 @@ private Random random;
 			throw new EmailAlreadyExistException("User with Email "+user.getUserMail()+" already exist");
 		 else
 		
-			 user.setUserId(String.valueOf(random.nextInt(100000)).substring(0, 5));
+			 user.setUserId(String.valueOf(random.nextInt(10000)));
 		   return  userRepo.save(user);
 		
 		}
 		else
-			throw new RuntimeException("wrong role");
+			throw new IllegalUserException("You have entered  wrong user role");
 		
 		
 	}
+	@Override
+	public User updateUser(User user) {
+		// TODO Auto-generated method stub
+		if(userRepo.existsById(user.getUserId()))
+		{
+			User existingUser=userRepo.getOne(user.getUserId());
+			existingUser.setUserPassword(user.getUserPassword());
+			existingUser.setUserMail(user.getUserMail());
+			existingUser.setUserNumber(user.getUserNumber());
+			return userRepo.save(existingUser);
+		}
+		else
+		{
+			throw new UserNotFoundException("User with userId : "+user.getUserId()+" doesnot exist");
+		}
+	}
+	@Override
+	public boolean deleteUser(String userId) {
+		// TODO Auto-generated method stub
+		if(userRepo.existsById(userId))
+		{
+			userRepo.deleteById(userId);
+			return true;
+		}
+		else
+		{
+			throw new UserNotFoundException("User with userId : "+userId+" doesnot exist");
+		}
+
+	}
+	@Override
+	public List<User> getAllUsers() {
+		// TODO Auto-generated method stub
+		if(userRepo.findAll()==null)
+		{
+			throw new UserNotFoundException(" User list is empty ");
+		}
+		List<User> userList=userRepo.findAll();
+		return userList;
+	}
+	
+	
+	
+	
+	
 	@Override
 	public void setTheWishList(String userId, String productId) {
 		// TODO Auto-generated method stub
@@ -94,12 +141,12 @@ private Random random;
 		    userRepo.save(user);
 		}	
 	}
-	@Override
-	public List<User> getAllUsers() {
-		// TODO Auto-generated method stub
-		List<User> userList=userRepo.findAll();
-		return userList;
-	}
+
+	
+	
+	
+	
+	
 	@Override
 	public void deleteFromTheWishList(String userId, String productId) {
 		// TODO Auto-generated method stub
@@ -109,4 +156,61 @@ private Random random;
 		userRepo.save(userWishList);
 		
 	}
+
+	@Override
+	public void setCartListData(String userId, String productId) {
+		// TODO Auto-generated method stub
+		User user=userRepo.getOne(userId);
+		User userCartList= userRepo.getOne(userId);
+		
+		userCartList.getCartList().add(productId);
+		userRepo.save(userCartList);
+		
+	}
+	@Override
+	public void setAddressListData(String userId, String addressId) {
+	
+		
+				User userAddressList= userRepo.getOne(userId);
+				
+				userAddressList.getAddressIds().add(addressId);
+				userRepo.save(userAddressList);
+		
+		
+	}
+	@Override
+	public void setOrderData(String userId, String orderId) {
+		// TODO Auto-generated method stub
+		
+		User userOrderList= userRepo.getOne(userId);
+		
+		userOrderList.getOrderIds().add(orderId);
+		userRepo.save(userOrderList);
+	}
+	@Override
+	public void setOrdersToNull(String userId, String productId) {
+		// TODO Auto-generated method stub
+		User userOrder= userRepo.getOne(userId);
+		userOrder.getOrderIds().remove(productId);
+		userRepo.save(userOrder);
+		
+	}
+	@Override
+	public void setOrderObjectToNull(String userId) {
+		// TODO Auto-generated method stub
+		User userOrder= userRepo.getOne(userId);
+		userOrder.setOrderIds(null);
+		userRepo.save(userOrder);
+		
+	}
+	@Override
+	public void removeProduct(String userId, String productId) {
+		// TODO Auto-generated method stub
+		User userCart= userRepo.getOne(userId);
+		userCart.getCartList().remove(productId);
+		userRepo.save(userCart);
+		
+	}
+	
+
 }
