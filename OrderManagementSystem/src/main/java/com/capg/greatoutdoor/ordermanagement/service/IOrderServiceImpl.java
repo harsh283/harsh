@@ -21,15 +21,14 @@ private Random random;
 @Autowired
 private RestTemplate restTemplate;
 LocalDate date=LocalDate.now();
-LocalDate dispatchDate=date.plusDays(2);
-LocalDate cantCancel=dispatchDate.MAX;
+
 LocalDateTime time=LocalDateTime.now();
 LocalDateTime cancelTime=time.plusMinutes(3);
 	@Override
 	public OrderDTO addOrder(OrderDTO orderDto) {
 		// TODO Auto-generated method stub
 	orderDto.setOrderDispatcherStatus(0);
-	orderDto.setProductUIN(random.nextInt(100000));
+	orderDto.setProductUniqueId((random.nextInt(100000)));
 	orderDto.setOrderInitiateTime(time);
 	orderDto.setOrderDispatchTime(cancelTime);
 	orderDto.setOrderId(String.valueOf(random.nextInt()).substring(0,4));
@@ -41,7 +40,10 @@ LocalDateTime cancelTime=time.plusMinutes(3);
 	@Override
 	public OrderDTO viewOrder(String orderId) {
 		// TODO Auto-generated method stub
-		return null;
+OrderDTO order=orderRepository.getOne(orderId);
+		
+		
+		return order;
 	}
 
 	@Override
@@ -54,6 +56,7 @@ LocalDateTime cancelTime=time.plusMinutes(3);
 	public void cancelOrder(String orderId) {
 		// TODO Auto-generated method stub
 		OrderDTO orderObject=orderRepository.getOne(orderId);
+		
 		if(time.isBefore(orderObject.getOrderDispatchTime()))
 		{
 			restTemplate.put("http://localhost:8400/userdata/orderremove/"+orderObject.getUserId(), null);
@@ -87,6 +90,12 @@ LocalDateTime cancelTime=time.plusMinutes(3);
 
 	@Override
 	public String dispatchDate() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public OrderDTO viewOrder(String userId, String orderId) {
 		// TODO Auto-generated method stub
 		return null;
 	}

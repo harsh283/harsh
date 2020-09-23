@@ -22,6 +22,8 @@ public interface IOrderService {
 
 	OrderDTO addOrder(OrderDTO orderDto);
 
+	OrderDTO viewOrder(String userId, String orderId);
+
 
 
 }

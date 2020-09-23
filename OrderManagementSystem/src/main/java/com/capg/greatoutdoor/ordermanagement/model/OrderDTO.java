@@ -14,7 +14,7 @@ private String orderId;
 private String userId;
 @ElementCollection 
 private List<String> productsList;
-private int productUIN;
+private int productUniqueId;
 private String addressId;
 private int orderDispatcherStatus;
 private LocalDateTime orderInitiateTime;
@@ -23,13 +23,13 @@ public OrderDTO() {
 	super();
 	// TODO Auto-generated constructor stub
 }
-public OrderDTO(String orderId, String userId, List<String> productsList, int productUIN, String addressId,
+public OrderDTO(String orderId, String userId, List<String> productsList, int productUniqueId, String addressId,
 		int orderDispatcherStatus, LocalDateTime orderInitiateTime, LocalDateTime orderDispatchTime) {
 	super();
 	this.orderId = orderId;
 	this.userId = userId;
 	this.productsList = productsList;
-	this.productUIN = productUIN;
+	this.productUniqueId = productUniqueId;
 	this.addressId = addressId;
 	this.orderDispatcherStatus = orderDispatcherStatus;
 	this.orderInitiateTime = orderInitiateTime;
@@ -53,11 +53,11 @@ public List<String> getProductsList() {
 public void setProductsList(List<String> productsList) {
 	this.productsList = productsList;
 }
-public int getProductUIN() {
-	return productUIN;
+public int getProductUniqueId() {
+	return productUniqueId;
 }
-public void setProductUIN(int productUIN) {
-	this.productUIN = productUIN;
+public void setProductUniqueId(int productUniqueId) {
+	this.productUniqueId = productUniqueId;
 }
 public String getAddressId() {
 	return addressId;
@@ -85,9 +85,10 @@ public void setOrderDispatchTime(LocalDateTime orderDispatchTime) {
 }
 @Override
 public String toString() {
-	return "OrderDTO [orderId=" + orderId + ", userId=" + userId + ", productsList=" + productsList + ", productUIN="
-			+ productUIN + ", addressId=" + addressId + ", orderDispatcherStatus=" + orderDispatcherStatus
-			+ ", orderInitiateTime=" + orderInitiateTime + ", orderDispatchTime=" + orderDispatchTime + "]";
+	return "OrderDTO [orderId=" + orderId + ", userId=" + userId + ", productsList=" + productsList
+			+ ", productUniqueId=" + productUniqueId + ", addressId=" + addressId + ", orderDispatcherStatus="
+			+ orderDispatcherStatus + ", orderInitiateTime=" + orderInitiateTime + ", orderDispatchTime="
+			+ orderDispatchTime + "]";
 }
 
 }

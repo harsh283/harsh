@@ -32,11 +32,6 @@ public class OrderController {
 		return orderService.viewOrder(orderId);
 	}
 	
-	@GetMapping("/viewAll")
-	public List<OrderDTO> viewAll() {
-		
-		return orderService.viewAll();
-	}
 	
 	@DeleteMapping("/delete/orderId/{orderId}")
 	public void cancelOrder(@PathVariable String orderId) {
