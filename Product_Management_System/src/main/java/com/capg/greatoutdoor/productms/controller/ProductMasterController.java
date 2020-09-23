@@ -24,12 +24,12 @@ public class ProductMasterController {
 		return productService.getAllProducts();
 	}
 	
-	@PostMapping("/addproduct")
-	String addProduct(@RequestBody ProductDto product) {
+	@PostMapping("/addproduct/{userId}")
+	String addProduct(@PathVariable String userId,@RequestBody ProductDto product) {
 		String status = "product added";
 		
 		
-		if(productService.addProduct(product)) {
+		if(productService.addProduct(userId,product)) {
 			return status;
 		}
 		
@@ -37,9 +37,9 @@ public class ProductMasterController {
 		
 	}
 	
-	@DeleteMapping("/deleteproduct/productId/{productId}")
-	String deleteProduct(@PathVariable String productId) {
-		if(productService.deleteProduct(productId)) {
+	@DeleteMapping("/deleteproduct/productId/{userId}/{productId}")
+	String deleteProduct(@PathVariable String userId,@PathVariable String productId) {
+		if(productService.deleteProduct(userId,productId)) {
 			return "product deleted!";
 		}
 		return "error";
@@ -65,6 +65,11 @@ public class ProductMasterController {
 	public ProductDto getProduct(@PathVariable String productId)
 	{
 		return productService.getProduct(productId);
+	}
+	@GetMapping("/get/{userId}")
+	public List<ProductDto> getProductByUserId(@PathVariable String userId)
+	{
+		return productService.getProductByUserId(userId);
 	}
 	
 }

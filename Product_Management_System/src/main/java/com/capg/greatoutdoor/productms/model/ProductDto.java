@@ -1,12 +1,14 @@
 package com.capg.greatoutdoor.productms.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="product")
-public class ProductDto {
+public class ProductDto implements Serializable {
 	@Id
 	private String productId;
 	private double price;

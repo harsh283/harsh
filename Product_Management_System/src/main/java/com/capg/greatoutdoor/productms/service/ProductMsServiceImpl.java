@@ -2,26 +2,34 @@ package com.capg.greatoutdoor.productms.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.capg.greatoutdoor.productms.model.ProductDto;
+import com.capg.greatoutdoor.productms.model.ProductMaster;
+import com.capg.greatoutdoor.productms.repository.IProductMasterRepository;
 import com.capg.greatoutdoor.productms.repository.ProductMsRepository;
 @Service
 public class ProductMsServiceImpl implements IProductMsService{
 	@Autowired
-	ProductMsRepository productRepository;
-
-
-	
+	private ProductMsRepository productRepository;
+	@Autowired
+	private IProductMasterRepository masterRepo;
+	@Autowired
+	private Random random;
+	@Autowired
+	private RestTemplate restTemplate;
 	@Override
 	public List<ProductDto> getAllProducts() {
 		return (List<ProductDto>) productRepository.findAll();
 	}
 
 	@Override
-	public boolean addProduct(ProductDto product) {
+	public boolean addProduct(String userId,ProductDto product) {
+		setProductId(userId, product.getProductId());
 		productRepository.save(product);
 		return true;
 	}
@@ -65,7 +73,8 @@ public class ProductMsServiceImpl implements IProductMsService{
 	}
 
 	@Override
-	public boolean deleteProduct(String productId) {
+	public boolean deleteProduct(String userId,String productId) {
+		removeProductId(userId, productId);
 		productRepository.deleteById(productId);
 		return true;
 	}
@@ -99,5 +108,41 @@ public class ProductMsServiceImpl implements IProductMsService{
 		// TODO Auto-generated method stub
 		
 		return productRepository.getOne(productId);
+	}
+
+	@Override
+	public ProductMaster addMaster(ProductMaster master) {
+		// TODO Auto-generated method stub
+		master.setUserId(String.valueOf(random.nextInt(100000)));
+		return  masterRepo.save(master);
+	}
+
+	@Override
+	public void setProductId(String userId, String productId) {
+		// TODO Auto-generated method stub
+		ProductMaster master=masterRepo.getOne(userId);
+		master.getProductIds().add(productId);
+		masterRepo.save(master);
+		
+	}
+	@Override
+	public void removeProductId(String userId, String productId) {
+		// TODO Auto-generated method stub
+		ProductMaster master=masterRepo.getOne(userId);
+		master.getProductIds().remove(productId);
+		masterRepo.save(master);
+		
+	}
+
+	@Override
+	public List<ProductDto> getProductByUserId(String userId) {
+		// TODO Auto-generated method stub
+		List<ProductDto> productList=new ArrayList<>();
+		ProductMaster master=masterRepo.getOne(userId);
+		for (String productId : master.getProductIds()) {
+			ProductDto product=getProduct(productId);
+			productList.add(product);
+		}
+		return productList;
 	}
 }
