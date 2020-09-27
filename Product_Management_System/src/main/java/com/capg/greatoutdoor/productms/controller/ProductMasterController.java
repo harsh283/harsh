@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.capg.greatoutdoor.productms.exceptions.UserNotFoundException;
 import com.capg.greatoutdoor.productms.model.ProductDto;
+import com.capg.greatoutdoor.productms.model.ProductMaster;
 import com.capg.greatoutdoor.productms.service.IProductMsService;
 @RestController
 @RequestMapping("/productmaster")
@@ -27,8 +29,6 @@ public class ProductMasterController {
 	@PostMapping("/addproduct/{userId}")
 	String addProduct(@PathVariable String userId,@RequestBody ProductDto product) {
 		String status = "product added";
-		
-		
 		if(productService.addProduct(userId,product)) {
 			return status;
 		}
@@ -71,5 +71,12 @@ public class ProductMasterController {
 	{
 		return productService.getProductByUserId(userId);
 	}
+	@GetMapping("/login/{userId}/{userPassword}")
+	public ProductMaster login(@PathVariable String userId,@PathVariable String userPassword) throws UserNotFoundException
+	{
+	return productService.login(userId,userPassword);	
+	}
+
+	
 	
 }

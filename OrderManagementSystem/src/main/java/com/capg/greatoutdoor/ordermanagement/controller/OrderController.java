@@ -3,7 +3,6 @@ package com.capg.greatoutdoor.ordermanagement.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.jaxb.SpringDataJaxb.OrderDto;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.capg.greatoutdoor.ordermanagement.model.OrderDTO;
+import com.capg.greatoutdoor.ordermanagement.model.ProductDto;
 import com.capg.greatoutdoor.ordermanagement.service.IOrderService;
 @RestController
 @RequestMapping("/order")
@@ -44,10 +44,19 @@ public class OrderController {
 		
 		orderService.cancelProduct(orderId,productId);
 	}
-	
-	@GetMapping("/dispatcherDate/{orderId}")
-	public String dispatcherDate(@PathVariable String orderId) {
-		
-		return orderService.dispatchDate();
+	@GetMapping("/get/{userId}")
+	public List<ProductDto> getProducts(@PathVariable String userId)
+	{
+		return orderService.getProducts(userId);
 	}
+@GetMapping("/find/{userId}")
+public List<String> getOrderByUserId(@PathVariable String userId)
+{
+	return orderService.getOrderByUserId(userId);
+}
+@GetMapping("/findbyorderid/{orderId}")
+public List<ProductDto> getOrderByOrderId(@PathVariable String orderId)
+{
+	return orderService.getProductsByOrderId(orderId);
+}
 }

@@ -19,4 +19,6 @@ public interface IProductMsService {
 	public void setProductId(String userId,String productId);
 	public void removeProductId(String userId,String productId);
 	public List<ProductDto> getProductByUserId(String userId);
+	public ProductMaster login(String userId, String userPassword);
+
 }

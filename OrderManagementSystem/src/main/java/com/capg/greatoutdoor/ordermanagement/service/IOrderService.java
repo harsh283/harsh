@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.jaxb.SpringDataJaxb.OrderDto;
 
 import com.capg.greatoutdoor.ordermanagement.model.OrderDTO;
+import com.capg.greatoutdoor.ordermanagement.model.ProductDto;
 
 public interface IOrderService {
 
@@ -12,17 +13,28 @@ public interface IOrderService {
 
 	OrderDTO viewOrder(String orderId);
 
-	List<OrderDTO> viewAll();
+
 
 	void cancelOrder(String orderId);
 
 	void cancelProduct(String orderId, String productId);
 
-	String dispatchDate();
 
 	OrderDTO addOrder(OrderDTO orderDto);
 
-	OrderDTO viewOrder(String userId, String orderId);
+
+
+	List<ProductDto> getProducts(String userId);
+	List<ProductDto> getProductsByOrderId(String orderId);
+
+
+	List<String> getOrderByUserId(String userId);
+
+
+
+	
+
+	
 
 
 

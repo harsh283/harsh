@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.capg.greatoutdoor.productms.exceptions.UserNotFoundException;
 import com.capg.greatoutdoor.productms.model.ProductDto;
 import com.capg.greatoutdoor.productms.model.ProductMaster;
 import com.capg.greatoutdoor.productms.repository.IProductMasterRepository;
@@ -29,6 +30,10 @@ public class ProductMsServiceImpl implements IProductMsService{
 
 	@Override
 	public boolean addProduct(String userId,ProductDto product) {
+		if(productRepository.existsById(product.getProductId()))
+		{
+			throw new RuntimeException("Product already exists with this id");
+		}
 		setProductId(userId, product.getProductId());
 		productRepository.save(product);
 		return true;
@@ -64,6 +69,7 @@ public class ProductMsServiceImpl implements IProductMsService{
 			{
 				existingProduct.setPrice(product.getPrice());
 			}
+			
 			productRepository.saveAndFlush(existingProduct);
 			System.out.println(existingProduct);
 			return true;
@@ -145,4 +151,26 @@ public class ProductMsServiceImpl implements IProductMsService{
 		}
 		return productList;
 	}
+
+	@Override
+	public ProductMaster login(String userId, String userPassword) {
+		// TODO Auto-generated method stub
+		if(masterRepo.existsById(userId))
+		{
+		ProductMaster productMaster = masterRepo.getOne(userId);
+		System.out.println(productMaster);
+			if(productMaster.getUserPassword().equals(userPassword))
+			{
+				return productMaster;	
+			}
+			throw new UserNotFoundException(" User password mismatch");
+			
+		}
+		else
+		{
+			throw new UserNotFoundException(" User with user id "+userId+" doesnot exist");
+		}
+	
+	}
+
 }
