@@ -1,7 +1,8 @@
 package com.capg.greatoutdoor.cartmanagement.model;
 
-import java.util.HashMap;
+import java.util.List;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 /**
@@ -11,69 +12,35 @@ import javax.persistence.Id;
 public class CartDTO {
 	@Id
 	private String userId;
-	HashMap<String, Integer> myCart = new HashMap<>();
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((myCart == null) ? 0 : myCart.hashCode());
-		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CartDTO other = (CartDTO) obj;
-		if (myCart == null) {
-			if (other.myCart != null)
-				return false;
-		} else if (!myCart.equals(other.myCart))
-			return false;
-		if (userId == null) {
-			if (other.userId != null)
-				return false;
-		} else if (!userId.equals(other.userId))
-			return false;
-		return true;
-	}
-
+	@ElementCollection
+	private List<String> productList;
 	public CartDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
-	public CartDTO(String userId, HashMap<String, Integer> details) {
+	public CartDTO(String userId, List<String> productList) {
 		super();
 		this.userId = userId;
-		this.myCart = details;
+		this.productList = productList;
 	}
-
 	public String getUserId() {
 		return userId;
 	}
-
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-
-	public HashMap<String, Integer> getMyCart() {
-		return myCart;
+	public List<String> getProductList() {
+		return productList;
 	}
-
-	public void setMyCart(HashMap<String, Integer> details) {
-		this.myCart = details;
+	public void setProductList(List<String> productList) {
+		this.productList = productList;
 	}
-
 	@Override
 	public String toString() {
-		return "CartDTO [userId=" + userId + ", details=" + myCart + "]";
+		return "CartDTO [userId=" + userId + ", productList=" + productList + "]";
 	}
+
+	
+
 
 }

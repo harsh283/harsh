@@ -13,4 +13,6 @@ public interface ICartManagementService {
 	public boolean removeFromCart(String userId, String productId) throws ProductNotFound, UserNotFound;
 
 	public List<ProductDto> viewAllProductsInCart(String userId) throws UserNotFound;
+
+	public void removeProduct(String userId, String productId);
 }
