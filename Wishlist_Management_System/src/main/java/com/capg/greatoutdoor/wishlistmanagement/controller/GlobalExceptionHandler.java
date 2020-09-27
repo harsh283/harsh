@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.capg.greatoutdoor.wishlistmanagement.exceptions.ErrorInfo;
+import com.capg.greatoutdoor.wishlistmanagement.exceptions.ProductAlreadyExistsException;
 import com.capg.greatoutdoor.wishlistmanagement.exceptions.UserDoesnotExistsException;
 
 
@@ -30,13 +31,13 @@ import com.capg.greatoutdoor.wishlistmanagement.exceptions.UserDoesnotExistsExce
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 	
-//	@ResponseStatus(code=HttpStatus.NOT_FOUND)
-//	@ExceptionHandler(value= {EmptyAddressListException.class})
-//	public ErrorInfo handleCenterAlreadyExistsException(EmptyAddressListException ex , HttpServletRequest req)
-//	{
-//		return new ErrorInfo(LocalDateTime.now(), ex.getMessage(),req.getRequestURI().toString());
-//	}
-//	
+	@ResponseStatus(code=HttpStatus.NOT_FOUND)
+	@ExceptionHandler(value= {ProductAlreadyExistsException.class})
+	public ErrorInfo handleProductAlreadyExistsException(ProductAlreadyExistsException ex , HttpServletRequest req)
+	{
+		return new ErrorInfo(LocalDateTime.now(), ex.getMessage(),req.getRequestURI().toString());
+	}
+
 	@ResponseStatus(code=HttpStatus.NOT_FOUND)
 	@ExceptionHandler(value= {UserDoesnotExistsException.class})
 	public ErrorInfo handleSpecifiedCenterDoesnotExistException(UserDoesnotExistsException ex , HttpServletRequest req)

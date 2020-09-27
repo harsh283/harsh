@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.capg.greatoutdoor.usermanagement.exceptions.UserNotFoundException;
 import com.capg.greatoutdoor.usermanagement.model.User;
 import com.capg.greatoutdoor.usermanagement.service.IUserService;
 
@@ -41,11 +42,17 @@ private IUserService service;
 	{
 		return service.deleteUser(userId);
 	}
-	
-	
-	
-	
-	
+
+	@GetMapping("/getuser/{userId}")
+	public User getUserByUserId(@PathVariable String userId)
+	{
+		return service.getUserByUserId(userId);
+	}
+	@GetMapping("/login/{userId}/{userPassword}")
+	public User login(@PathVariable String userId,@PathVariable String userPassword) throws UserNotFoundException
+	{
+	return service.login(userId,userPassword);	
+	}
 	
 	
 	@PutMapping("/setlist/{userId}/{productId}")
@@ -71,6 +78,11 @@ private IUserService service;
 	{
 		service.setAddressListData(userId,addressId);
 	}
+	@PutMapping("/deletefromaddresslist/{userId}/{addressId}")
+	public void deleteaddressData(@PathVariable String userId,@PathVariable String addressId)
+	{
+		service.deleteAddressData(userId,addressId);
+	}
 
 	@PutMapping("/setorder/{userId}/{orderId}")
 	public void setOrderData(@PathVariable String userId,@PathVariable String orderId)
@@ -85,4 +97,5 @@ private IUserService service;
 	public void setOrdersToNull(@PathVariable String userId, @PathVariable String productId) {
 		service.setOrdersToNull(userId, productId);
 	}
+	
 }

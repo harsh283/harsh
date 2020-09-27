@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.capg.greatoutdoor.wishlistmanagement.exceptions.ProductAlreadyExistsException;
 import com.capg.greatoutdoor.wishlistmanagement.exceptions.UserDoesnotExistsException;
 import com.capg.greatoutdoor.wishlistmanagement.model.ProductDto;
 import com.capg.greatoutdoor.wishlistmanagement.model.WishListDTO;
@@ -20,13 +21,20 @@ private RestTemplate restTemplate;
 	@Override
 	public WishListDTO addToWishList(WishListDTO wishListObject) {
 		// TODO Auto-generated method stub
+		String product="";
+		System.out.println(wishListObject.getProductIds());
 		if(wishListRepository.existsById(wishListObject.getUserId()))
 		{
 
 				WishListDTO existingWishList=wishListRepository.getOne(wishListObject.getUserId());
 				for (String productId : wishListObject.getProductIds()) {
-					existingWishList.getProductIds().add(productId);	
-					restTemplate.put("http://localhost:8400/userdata/setlist/"+wishListObject.getUserId()+"/"+productId,ProductDto.class);
+					product=productId;
+					if(existingWishList.getProductIds().contains(product))
+					{
+						throw new ProductAlreadyExistsException("Product with product id "+productId+" already exists");
+					}
+					existingWishList.getProductIds().add(product);	
+					restTemplate.put("http://localhost:8400/userdata/setlist/"+wishListObject.getUserId()+"/"+product,null);
 				}
 				
 				
@@ -35,6 +43,8 @@ private RestTemplate restTemplate;
 		}
 		else
 		{
+			System.err.println(product+"dhidqhdihiadhiajdiofjoisfhoisfhifhievh");
+			restTemplate.put("http://localhost:8400/userdata/setlist/"+wishListObject.getUserId()+"/"+product,null);
 			return wishListRepository.save(wishListObject);
 		}
 		
@@ -59,9 +69,11 @@ private RestTemplate restTemplate;
 		{
 		WishListDTO wishListObject=wishListRepository.getOne(userId);
 		List<String> products= wishListObject.getProductIds();
+		System.out.println(products);
 		List<ProductDto> productList=new ArrayList<>();
 		for (String string : products) {
 			ProductDto product=restTemplate.getForObject("http://localhost:8300/productmaster/get/productId/"+string, ProductDto.class);
+			System.out.println(product);
 			productList.add(product);
 		}
 		

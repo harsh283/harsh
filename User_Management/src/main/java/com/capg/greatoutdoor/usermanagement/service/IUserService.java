@@ -19,4 +19,8 @@ public interface IUserService {
 	User updateUser(User user);
 	boolean deleteUser(String userId);
 
+	User getUserByUserId(String userId);
+	void deleteAddressData(String userId, String addressId);
+	User login(String userId, String userPassword);
+
 }

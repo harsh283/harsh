@@ -30,7 +30,7 @@ public class WishListController {
 	{
 		return service.deleteFromWishList(userId,productId);
 	}
-	@GetMapping("getwishlist/{userId}")
+	@GetMapping("/getwishlist/{userId}")
 	public List<ProductDto> viewProductsInWishList(@PathVariable String userId)
 	{
 		return service.viewProductsInWishList(userId);

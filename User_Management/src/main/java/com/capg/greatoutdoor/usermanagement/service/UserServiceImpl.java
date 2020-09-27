@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.capg.greatoutdoor.usermanagement.exceptions.ContactNumberAlreadyExistException;
 import com.capg.greatoutdoor.usermanagement.exceptions.EmailAlreadyExistException;
 import com.capg.greatoutdoor.usermanagement.exceptions.IllegalUserException;
+import com.capg.greatoutdoor.usermanagement.exceptions.PasswordIncorrectException;
 import com.capg.greatoutdoor.usermanagement.exceptions.UserEmailInvalidException;
 import com.capg.greatoutdoor.usermanagement.exceptions.UserNameAlreadyExistException;
 import com.capg.greatoutdoor.usermanagement.exceptions.UserNameInvalidException;
@@ -71,8 +72,10 @@ private Random random;
 		 else
 		
 			 user.setUserId(String.valueOf(random.nextInt(10000)));
-		   return  userRepo.save(user);
-		
+		  System.out.println(user.getUserId());
+		  userRepo.save(user);
+		  User user1 = userRepo.getOne(user.getUserId());
+		   return user1;
 		}
 		else
 			throw new IllegalUserException("You have entered  wrong user role");
@@ -210,6 +213,38 @@ private Random random;
 		userCart.getCartList().remove(productId);
 		userRepo.save(userCart);
 		
+	}
+	@Override
+	public User getUserByUserId(String userId) {
+		// TODO Auto-generated method stub
+		User user=userRepo.getOne(userId);
+		return user;
+	}
+	@Override
+	public void deleteAddressData(String userId, String addressId) {
+		// TODO Auto-generated method stub
+		User userOrder= userRepo.getOne(userId);
+		userOrder.getAddressIds().remove(addressId);
+		userRepo.save(userOrder);
+		
+	}
+	@Override
+	public User login(String userId, String userPassword) {
+		// TODO Auto-generated method stub
+		if(userRepo.existsById(userId))
+		{
+		User user = userRepo.getOne(userId);
+			if(user.getUserPassword().equals(userPassword))
+			{
+				return user;
+			}
+			throw new PasswordIncorrectException("Password is incorrect");
+	
+		}
+		else
+		{
+			throw new UserNotFoundException(" User with user id "+userId+" doesnot exist");
+		}
 	}
 	
 
