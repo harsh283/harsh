@@ -26,27 +26,33 @@ import com.capg.greatoutdoor.addressmanagement.service.IAddressService;
 public class AddressManagementController {
 	@Autowired
 	private IAddressService service;
-@PostMapping("/addaddress")
-public boolean addAddress(@RequestBody Address addressObject)
-{
-return service.addAddress(addressObject);	
-}
-@DeleteMapping("/deleteaddress")
-public boolean deleteAddress(@RequestBody Address address)
-{
-	return service.deleteAddress(address);
+
+	/* maps to add address method in service layer */
+	@PostMapping("/addaddress")
+	public boolean addAddress(@RequestBody Address addressObject)
+	{
+	return service.addAddress(addressObject);	
+	}
 	
-}
-@PutMapping("/updateAddress")
-public boolean updateAddress(@RequestBody Address address)
-{
-	return service.updateAddress(address);
-}
-@GetMapping("/getaddress/{userId}")
-public List<Address> getAddress(@PathVariable String userId)
-{
-return service.getAllAddress(userId);	
-}
+	/* maps to delete address method in service layer */
+	@DeleteMapping("/deleteaddress/{addressId}")
+	public boolean deleteAddress(@PathVariable String addressId)
+	{
+		return service.deleteAddress(addressId);
+		
+	}
+	/* maps to update address method in service layer */
+	@PutMapping("/updateAddress")
+	public boolean updateAddress(@RequestBody Address address)
+	{
+		return service.updateAddress(address);
+	}
+	/* maps to get all address method in service layer */
+	@GetMapping("/getaddress/{userId}")
+	public List<Address> getAddress(@PathVariable String userId)
+	{
+	return service.getAllAddress(userId);	
+	}
 
 
 }

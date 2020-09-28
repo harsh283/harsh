@@ -24,39 +24,29 @@ import com.capg.greatoutdoor.addressmanagement.exceptions.ErrorInfo;
 	* The GlobalExceptionHandler class to control the exceptions raised
 	*
 	* @author   :Shambu Harsh Kumar
-	* @version  :1.0
-	* @since    :2020-08-20 
+	* @since    :2020-09-20 
 **/
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-	
+	/**
+	* This method will be invoked when empty address list exception is found while returning address List
+	*/
 	@ResponseStatus(code=HttpStatus.NOT_FOUND)
 	@ExceptionHandler(value= {EmptyAddressListException.class})
-	public ErrorInfo handleCenterAlreadyExistsException(EmptyAddressListException ex , HttpServletRequest req)
+	public ErrorInfo handleEmptyAddressListException(EmptyAddressListException exception , HttpServletRequest request)
 	{
-		return new ErrorInfo(LocalDateTime.now(), ex.getMessage(),req.getRequestURI().toString());
+		return new ErrorInfo(LocalDateTime.now(), exception.getMessage(),request.getRequestURI().toString());
 	}
-	
+	/**
+	* This method will be invoked when empty address is found
+	*/
 	@ResponseStatus(code=HttpStatus.NOT_FOUND)
 	@ExceptionHandler(value= {AddressDoesnotExist.class})
-	public ErrorInfo handleSpecifiedCenterDoesnotExistException(AddressDoesnotExist ex , HttpServletRequest req)
+	public ErrorInfo handleAddressDoesnotExistException(AddressDoesnotExist exception , HttpServletRequest request)
 	{
-		return new ErrorInfo(LocalDateTime.now(), ex.getMessage(),req.getRequestURI().toString());
+		return new ErrorInfo(LocalDateTime.now(), exception.getMessage(),request.getRequestURI().toString());
 	}
 	
-//	@ResponseStatus(code=HttpStatus.BAD_REQUEST)
-//	@ExceptionHandler(value= {CenterAlreadyExistsException.class})
-//	public ErrorInfo handleCenterAlreadyExistsException(CenterAlreadyExistsException ex , HttpServletRequest req)
-//	{
-//		return new ErrorInfo(LocalDateTime.now(), ex.getMessage(),req.getRequestURI().toString());
-//	}
-//	
-//	@ResponseStatus(code=HttpStatus.BAD_REQUEST)
-//	@ExceptionHandler(value= {CenterNameAlreadyExistsException.class})
-//	public ErrorInfo handleCenterNameAlreadyExistsException(CenterNameAlreadyExistsException ex , HttpServletRequest req)
-//	{
-//		return new ErrorInfo(LocalDateTime.now(), ex.getMessage(),req.getRequestURI().toString());
-//	}
 
 }

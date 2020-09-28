@@ -13,7 +13,7 @@ public interface IAddressService {
 
 	boolean addAddress(Address addressObject);
 	List<Address> getAllAddress(String userId);
-	boolean deleteAddress(Address address);
+	boolean deleteAddress(String addressId);
 	boolean updateAddress(Address address);
 	
 
